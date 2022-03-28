@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+
+services:
+
+  postgresql_sequra:
+    image: "postgres:12.2"
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgresql_sequra:/var/lib/postgresql/data
+      - ./infrastructure/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+
+  poyspark_notebooks_sequra:
+    image: "jupyter/pyspark-notebook"
+    restart: unless-stopped
+    ports:
+      - 8888:8888
+    volumes:
+      - ./work:/home/jovyan/work
+    command: >
+      bash -c "start.sh jupyter lab --LabApp.token=''"
+
+volumes:
+  postgresql_sequra:
